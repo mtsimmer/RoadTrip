@@ -6,6 +6,7 @@ import json
 Airports = []
 continent_to_airport = {}
 country_to_airport = {}
+IATA_to_airport = {}
 
 
 def load_airports(airport_dataset_path=r"Datasets\airport-codes_json.json"):
@@ -31,7 +32,7 @@ def get_continent_airports(Airports, continent):
 
 def get_country_airports(Airports, country):
 	"""
-	returns country's airport
+	returns country's airport, from previously chosen continent
 	"""
 	global country_to_airport
 	if country not in country_to_airport.keys():
@@ -42,11 +43,14 @@ def get_country_airports(Airports, country):
 		print("No such country \navailable countries:", country_to_airport.keys())
 
 def get_all_IATAs(Airports):
-	All_IATAs = []
+	global IATA_to_airport
 	for air in Airports:
-		if air['iata_code'] != None:
-			All_IATAs.append(air['iata_code'])
-	return All_IATAs
+		if air['type'] != 'heliport':
+			if air['iata_code'] not in IATA_to_airport.keys():
+				IATA_to_airport[air['iata_code']] = [air]
+			else:
+				IATA_to_airport[air['iata_code']].append(air)
+	return IATA_to_airport
 
 
 
